@@ -78,7 +78,7 @@ $(function() {
     }
 
     // Get touchstart input
-    let dir;
+    let dirTrue;
     for (const arrow in arrows) {
         
         if (arrow == "up") {
@@ -86,13 +86,13 @@ $(function() {
             $(arrows[arrow]).on("touchstart", () => {
 
                 arrows[arrow].attr("src", pressed);
-                dir = "UP";
+                dirTrue = "UP";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/setDirectionTrue",
-                    data : {"DIR": dir}
+                    url: "/setDirection",
+                    data : {"DIR": dirTrue}
         
                 }); 
     
@@ -103,13 +103,13 @@ $(function() {
             $(arrows[arrow]).on("touchstart", () => {
 
                 arrows[arrow].attr("src", pressed);
-                ledOn = "LED_DOWN";
+                dirTrue = "DOWN";
               
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOnLED",
-                    data : {"LED": ledOn}
+                    url: "/setDirection",
+                    data : {"DIR": dirTrue}
         
                 }); 
     
@@ -120,13 +120,13 @@ $(function() {
             $(arrows[arrow]).on("touchstart", () => {
 
                 arrows[arrow].attr("src", pressed);
-                ledOn = "LED_RIGHT";
+                dirTrue = "RIGHT";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOnLED",
-                    data : {"LED": ledOn}
+                    url: "/setDirection",
+                    data : {"DIR": dirTrue}
         
                 }); 
     
@@ -137,13 +137,13 @@ $(function() {
             $(arrows[arrow]).on("touchstart", () => {
 
                 arrows[arrow].attr("src", pressed);
-                ledOn = "LED_LEFT";
+                dirTrue = "LEFT";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOnLED",
-                    data : {"LED": ledOn}
+                    url: "/setDirection",
+                    data : {"DIR": dirTrue}
         
                 }); 
     
@@ -154,7 +154,7 @@ $(function() {
     }
 
     // Get touchend input
-    let ledOff;
+    let dirFalse;
     for (const arrow in arrows) {
         
         if (arrow == "up") {
@@ -162,13 +162,13 @@ $(function() {
             $(arrows[arrow]).on("touchend", () => {
 
                 arrows[arrow].attr("src", unpressed);
-                ledOff = "LED_UP";
+                dirFalse = "UP";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOffLED",
-                    data : {"LED": ledOff}
+                    url: "/setDirectionZero",
+                    data : {"DIR": dirFalse}
         
                 });  
     
@@ -179,13 +179,13 @@ $(function() {
             $(arrows[arrow]).on("touchend", () => {
 
                 arrows[arrow].attr("src", unpressed);
-                ledOff = "LED_DOWN";
+                dirFalse = "DOWN";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOffLED",
-                    data : {"LED": ledOff}
+                    url: "/setDirectionZero",
+                    data : {"DIR": dirFalse}
         
                 });  
     
@@ -196,13 +196,13 @@ $(function() {
             $(arrows[arrow]).on("touchend", () => {
 
                 arrows[arrow].attr("src", unpressed);
-                ledOff = "LED_RIGHT";
+                dirFalse = "RIGHT";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOffLED",
-                    data : {"LED": ledOff}
+                    url: "/setDirectionZero",
+                    data : {"DIR": dirFalse}
         
                 });  
     
@@ -213,13 +213,13 @@ $(function() {
             $(arrows[arrow]).on("touchend", () => {
 
                 arrows[arrow].attr("src", unpressed);
-                ledOff = "LED_LEFT";
+                dirFalse = "LEFT";
 
                 $.ajax({
         
                     type: "POST",
-                    url: "/turnOffLED",
-                    data : {"LED": ledOff}
+                    url: "/setDirectionZero",
+                    data : {"DIR": dirFalse}
         
                 });  
     

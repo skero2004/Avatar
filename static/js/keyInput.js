@@ -70,7 +70,7 @@ $(function() {
             $.ajax({
 
                 type: "POST",
-                url: "/setDirectionTrue",
+                url: "/setDirection",
                 data : {"DIR": dir}
     
             });
@@ -142,7 +142,7 @@ $(function() {
             $.ajax({
 
                 type: "POST",
-                url: "/setDirectionFalse",
+                url: "/setDirectionZero",
                 data : {"DIR": dir}
     
             });

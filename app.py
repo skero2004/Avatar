@@ -38,7 +38,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 # GPIO pins
-LED_PINS = {
+PINS = {
 
     "PWM_R": 25,
     "PWM_L": 23,
@@ -48,32 +48,104 @@ LED_PINS = {
 }
 
 # Setup pins
-for pin in LED_PINS:
-    GPIO.setup(LED_PINS[pin], GPIO.OUT)
-    GPIO.output(LED_PINS[pin], False)
+for pin in PINS:
+    GPIO.setup(PINS[pin], GPIO.OUT)
+    GPIO.output(PINS[pin], False)
+
+# Setup PWM (20 KHz)
+PWM_MAX = 100
+rightMotorPWM = GPIO.PWM(PINS["PWM_R"], 20)
+rightMotorPWM.start(0)
+rightMotorPWM.ChangeDutyCycle(0)
+leftMotorPWM = GPIO.PWM(PINS["PWM_L"], 20)
+leftMotorPWM.start(0)
+leftMotorPWM.ChangeDutyCycle(0)
 
 # Directions
 DIR = {
 
-    "UP": False,
-    "DOWN": False,
-    "RIGHT": False,
-    "LEFT": False
+    "UP": 0,
+    "DOWN": 0,
+    "RIGHT": 0,
+    "LEFT": 0
 
 }
 
-# Set the direction to True
-@app.route("/setDirectionTrue", methods=["POST"])
-def turnOnLED():
+# Motor functions
+
+def setMotorRight(power):
+    
+    if power < 0: 
+        # Reverse mode
+        GPIO.output(PINS["DIR_R"], False)
+        pwm = -int(PWM_MAX * power)
+        if pwm > PWM_MAX:
+            pwm = PWM_MAX
+    elif power > 0:
+        # Forward mode
+        GPIO.output(PINS["DIR_R"], True)
+        pwm = int(PWM_MAX * power)
+        if pwm > PWM_MAX:
+            pwm = PWM_MAX
+    else:
+        # Stop mode
+        GPIO.output(PINS["DIR_R"], False)
+        pwm = 0
+    
+    rightMotorPWM.ChangeDutyCycle(pwm)
+
+def setMotorLeft(power):
+
+    if power < 0: 
+        # Reverse mode
+        GPIO.output(PINS["DIR_L"], False)
+        pwm = -int(PWM_MAX * power)
+        if pwm > PWM_MAX:
+            pwm = PWM_MAX
+    elif power > 0:
+        # Forward mode
+        GPIO.output(PINS["DIR_L"], True)
+        pwm = int(PWM_MAX * power)
+        if pwm > PWM_MAX:
+            pwm = PWM_MAX
+    else:
+        # Stop mode
+        GPIO.output(PINS["DIR_L"], False)
+        pwm = 0
+
+    leftMotorPWM.ChangeDutyCycle(pwm)    
+
+# Motor update
+def updateMotors():
+    
+    drive = DIR["UP"] - DIR["DOWN"]
+    turn = DIR["RIGHT"] - DIR["LEFT"]
+
+    left = drive + turn
+    right = drive - turn
+
+    maximum = max(abs(left), abs(right))
+    if maximum > 1:
+        left /= maximum
+        right /= maximum
+    
+    setMotorLeft(left)
+    setMotorRight(right)
+
+# Set the direction
+@app.route("/setDirection", methods=["POST"])
+def setDirection():
     direction = request.form["DIR"]
-    DIR[direction] = True
+    DIR[direction] = 1
+    updateMotors()
     return ""
 
-# Set the direction to False
-@app.route("/setDirectionFalse", methods=["POST"])
-def turnOffLED():
+# Set the direction to 0
+@app.route("/setDirectionZero", methods=["POST"])
+def setDirectionZero():
     direction = request.form["DIR"]
-    DIR[direction] = False
+    DIR[direction] = 0
+    updateMotors()
     return ""
 
 
