@@ -1,23 +1,17 @@
 from flask import Flask, render_template, request, Response
-#from flask_httpauth import HTTPDigestAuth
+from flask_httpauth import HTTPDigestAuth
 from time import sleep
 from threading import Thread
 import RPi.GPIO as GPIO
-import urllib3
 import os
 import sys
 import io
 import server
 
-# Get IP
-#http = urllib3.PoolManager()
-#r = http.request('GET', 'http://icanhazip.com/') 
-#print("\n" + r.data)
-
 # App variable
 app = Flask(__name__)
-#app.config["SECRET_KEY"] = os.urandom(24)
-'''
+app.config["SECRET_KEY"] = os.urandom(24)
+
 # Authentication
 auth = HTTPDigestAuth()
 users = {
@@ -28,10 +22,10 @@ def get_pw(username):
     if username in users:
         return users.get(username)
     return None
-'''
+
 # HTML when page loaded
 @app.route("/")
-#@auth.login_required
+@auth.login_required
 def index():
     return render_template("index.html")
 
@@ -72,6 +66,13 @@ DIR = {
     "DOWN": 0,
     "RIGHT": 0,
     "LEFT": 0
+
+}
+
+# Multiplier
+multiplier = {
+
+    "multiplier": 1.0
 
 }
 
@@ -132,9 +133,8 @@ def updateMotors():
     if maximum > 1:
         left /= maximum
         right /= maximum
-    
-    setMotorLeft(left)
-    setMotorRight(right)
+    setMotorLeft(left * multiplier["multiplier"])
+    setMotorRight(right * multiplier["multiplier"])
 
 # Set the direction
 @app.route("/setDirection", methods=["POST"])
@@ -151,6 +151,13 @@ def setDirectionZero():
     DIR[direction] = 0
     updateMotors()
     return ""
+
+@app.route("/setMultiplier", methods=["POST"])
+def setMultiplier():
+    number = request.form["multiplier"]
+    multiplier["multiplier"] = float(number)
+    updateMotors()
+    return ""    
 
 
 

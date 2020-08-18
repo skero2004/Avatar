@@ -1,11 +1,14 @@
 $(function() {
 
-    // Get arrows
-    let arrows = $("#arrows").children();
+    // Get moveButtons
+    let moveButtons = $("#moveButtons").children();
 
     // Source
     let unpressed = $("#unpressed").attr("src");
     let pressed = $("#pressed").attr("src");
+    let slowMode = $("#slowMode").attr("src");
+    let normalMode = $("#normalMode").attr("src");
+    let isSlow = false;
 
     // Get keydown input
     $(document).keydown(e => {
@@ -13,11 +16,11 @@ $(function() {
         let dir;
         if (e.key == "w" || e.key == "ArrowUp") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "up") {
+                if (moveButtons[i].name == "up") {
 
-                    arrows[i].src = pressed;
+                    moveButtons[i].src = pressed;
 
                 }
 
@@ -26,11 +29,11 @@ $(function() {
 
         } else if (e.key == "a" || e.key == "ArrowLeft") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "left") {
+                if (moveButtons[i].name == "left") {
 
-                    arrows[i].src = pressed;
+                    moveButtons[i].src = pressed;
 
                 }
 
@@ -39,11 +42,11 @@ $(function() {
 
         } else if (e.key == "s" || e.key == "ArrowDown") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "down") {
+                if (moveButtons[i].name == "down") {
 
-                    arrows[i].src = pressed;
+                    moveButtons[i].src = pressed;
 
                 }
 
@@ -52,11 +55,11 @@ $(function() {
 
         } else if (e.key == "d" || e.key == "ArrowRight") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "right") {
+                if (moveButtons[i].name == "right") {
 
-                    arrows[i].src = pressed;
+                    moveButtons[i].src = pressed;
 
                 }
 
@@ -85,11 +88,11 @@ $(function() {
         let dir;
         if (e.key == "w" || e.key == "ArrowUp") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "up") {
+                if (moveButtons[i].name == "up") {
 
-                    arrows[i].src = unpressed;
+                    moveButtons[i].src = unpressed;
 
                 }
 
@@ -98,11 +101,11 @@ $(function() {
 
         } else if (e.key == "a" || e.key == "ArrowLeft") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "left") {
+                if (moveButtons[i].name == "left") {
 
-                    arrows[i].src = unpressed;
+                    moveButtons[i].src = unpressed;
 
                 }
 
@@ -111,11 +114,11 @@ $(function() {
 
         } else if (e.key == "s" || e.key == "ArrowDown") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "down") {
+                if (moveButtons[i].name == "down") {
 
-                    arrows[i].src = unpressed;
+                    moveButtons[i].src = unpressed;
 
                 }
 
@@ -124,16 +127,55 @@ $(function() {
 
         } else if (e.key == "d" || e.key == "ArrowRight") {
 
-            for (let i = 0; i < arrows.length; i++) {
+            for (let i = 0; i < moveButtons.length; i++) {
 
-                if (arrows[i].name == "right") {
+                if (moveButtons[i].name == "right") {
 
-                    arrows[i].src = unpressed;
+                    moveButtons[i].src = unpressed;
 
                 }
 
             }
             dir = "RIGHT";
+
+        } else if (e.key = "Shift" && e.key != "Meta") {
+
+            isSlow = !isSlow;
+            if (isSlow) {
+
+                $.ajax({
+
+                    type: "POST",
+                    url: "/setMultiplier",
+                    data : {"multiplier": "0.5"}
+        
+                });
+
+            } else {
+
+                $.ajax({
+
+                    type: "POST",
+                    url: "/setMultiplier",
+                    data : {"multiplier": "1.0"}
+        
+                });
+
+            }
+
+            // Update graphics
+            for (let i = 0; i < moveButtons.length; i++) {
+
+                if (moveButtons[i].name == "slow") {
+
+                    if (isSlow)
+                        moveButtons[i].src = slowMode;
+                    else 
+                        moveButtons[i].src = normalMode;
+
+                }
+
+            }
 
         }
 
