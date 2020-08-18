@@ -1,19 +1,23 @@
 from flask import Flask, render_template, request, Response
-from flask_httpauth import HTTPDigestAuth
+#from flask_httpauth import HTTPDigestAuth
 from time import sleep
+from threading import Thread
 import RPi.GPIO as GPIO
 import urllib3
 import os
+import sys
+import io
+import server
 
 # Get IP
-http = urllib3.PoolManager()
-r = http.request('GET', 'http://icanhazip.com/') 
-print("\n" + r.data)
+#http = urllib3.PoolManager()
+#r = http.request('GET', 'http://icanhazip.com/') 
+#print("\n" + r.data)
 
 # App variable
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.urandom(24)
-
+#app.config["SECRET_KEY"] = os.urandom(24)
+'''
 # Authentication
 auth = HTTPDigestAuth()
 users = {
@@ -24,10 +28,10 @@ def get_pw(username):
     if username in users:
         return users.get(username)
     return None
-
+'''
 # HTML when page loaded
 @app.route("/")
-@auth.login_required
+#@auth.login_required
 def index():
     return render_template("index.html")
 
@@ -151,6 +155,7 @@ def setDirectionZero():
 
 
 if __name__ == "__main__":
+    Thread(target=server.main, daemon=True).start()
     app.run(debug=True, port=80, host="0.0.0.0")
 
 # Reset after exit

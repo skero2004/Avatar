@@ -25,3 +25,9 @@ img {
     -ms-user-select: none;
 
 }
+
+#videoCanvas {
+
+    margin-left: 20px;
+
+}

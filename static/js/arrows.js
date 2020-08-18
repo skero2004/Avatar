@@ -32,13 +32,14 @@ $(function() {
         });
         arrows[arrow].css("position", "absolute");
 
-        const TOP_POSITION = -20;
+        const TOP_POSITION = -350;
+        const LEFT_POSITION = -180;
         const SPACING = 5;
         if (arrow == "up") {
 
             arrows[arrow].css({
            
-                "left": `${-arrows[arrow].width() / 2}px`,
+                "left": `${LEFT_POSITION + -arrows[arrow].width() / 2}px`,
                 "top": `${TOP_POSITION}px`
             
             });
@@ -48,7 +49,7 @@ $(function() {
             arrows[arrow].css({
 
                 "transform": "rotate(180deg)",
-                "left": `${-arrows[arrow].width() / 2}px`,
+                "left": `${LEFT_POSITION + -arrows[arrow].width() / 2}px`,
                 "top": `${TOP_POSITION + arrows[arrow].height() + SPACING}px`
                 
             });
@@ -58,7 +59,7 @@ $(function() {
             arrows[arrow].css({
 
                 "transform": "rotate(90deg)",
-                "left": `${arrows[arrow].width() / 2 + SPACING}px`,
+                "left": `${LEFT_POSITION + arrows[arrow].width() / 2 + SPACING}px`,
                 "top": `${TOP_POSITION + arrows[arrow].height() + SPACING}px`
                 
             });
@@ -68,7 +69,7 @@ $(function() {
             arrows[arrow].css({
 
                 "transform": "rotate(-90deg)",
-                "left": `${-3 * arrows[arrow].width() / 2 - SPACING}px`,
+                "left": `${LEFT_POSITION + -3 * arrows[arrow].width() / 2 - SPACING}px`,
                 "top": `${TOP_POSITION + arrows[arrow].height() + SPACING}px`
                 
             });
