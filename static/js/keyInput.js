@@ -1,144 +1,128 @@
 $(function() {
 
-    // Get moveButtons
-    let moveButtons = $("#moveButtons").children();
+    // Get buttons
+    let buttons = $("#buttons").children();
 
     // Source
     let unpressed = $("#unpressed").attr("src");
     let pressed = $("#pressed").attr("src");
     let slowMode = $("#slowMode").attr("src");
     let normalMode = $("#normalMode").attr("src");
-    let isSlow = false;
+    let raise = $("#raise").attr("src");
+    let raisePressed = $("#raisePressed").attr("src");
+    let lower = $("#lower").attr("src");
+    let lowerPressed = $("#lowerPressed").attr("src");
 
-    // Get keydown input
-    $(document).keydown(e => {
+    let isSlow = false;
+    let isPressed = [false, false, false, false, false, false];
+
+    // Get keydown input    
+    $(document).on("keydown", e => {
 
         let dir;
-        if (e.key == "w" || e.key == "ArrowUp") {
+        if (e.key == "w") {
 
-            for (let i = 0; i < moveButtons.length; i++) {
+            for (let i = 0; i < buttons.length; i++) {
 
-                if (moveButtons[i].name == "up") {
+                if (buttons[i].name == "up") {
 
-                    moveButtons[i].src = pressed;
-
-                }
-
-            }
-            dir = "UP";
-
-        } else if (e.key == "a" || e.key == "ArrowLeft") {
-
-            for (let i = 0; i < moveButtons.length; i++) {
-
-                if (moveButtons[i].name == "left") {
-
-                    moveButtons[i].src = pressed;
+                    buttons[i].src = pressed;
 
                 }
 
             }
-            dir = "LEFT";
+            dir = "up";
 
-        } else if (e.key == "s" || e.key == "ArrowDown") {
+        } 
+        if (e.key == "a") {
 
-            for (let i = 0; i < moveButtons.length; i++) {
+            for (let i = 0; i < buttons.length; i++) {
 
-                if (moveButtons[i].name == "down") {
+                if (buttons[i].name == "left") {
 
-                    moveButtons[i].src = pressed;
-
-                }
-
-            }
-            dir = "DOWN";
-
-        } else if (e.key == "d" || e.key == "ArrowRight") {
-
-            for (let i = 0; i < moveButtons.length; i++) {
-
-                if (moveButtons[i].name == "right") {
-
-                    moveButtons[i].src = pressed;
+                    buttons[i].src = pressed;
 
                 }
 
             }
-            dir = "RIGHT";
+            dir = "left";
 
-        }
+        } 
+        if (e.key == "s") {
 
-        if (dir) {
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "down") {
+
+                    buttons[i].src = pressed;
+
+                }
+
+            }
+            dir = "down";
+
+        } 
+        if (e.key == "d") {
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "right") {
+
+                    buttons[i].src = pressed;
+
+                }
+
+            }
+            dir = "right";
+
+        } 
+        if (e.key == "ArrowUp" && !isPressed[4]) {
+
+            isPressed[4] = true;
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "raise") {
+
+                    buttons[i].src = raisePressed;
+
+                }
+
+            }
 
             $.ajax({
 
                 type: "POST",
-                url: "/setDirection",
-                data : {"DIR": dir}
+                url: "/setExtendPower",
+                data : {"power": 1}
+    
+            });
+
+        } 
+        if (e.key == "ArrowDown" && !isPressed[5]) {
+
+            isPressed[5] = true;
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "lower") {
+
+                    buttons[i].src = lowerPressed;
+
+                }
+
+            }
+
+            $.ajax({
+
+                type: "POST",
+                url: "/setExtendPower",
+                data : {"power": -1}
     
             });
 
         }
-
-    });
-
-    // Get keydown input
-    $(document).keyup(e => {
-
-        let dir;
-        if (e.key == "w" || e.key == "ArrowUp") {
-
-            for (let i = 0; i < moveButtons.length; i++) {
-
-                if (moveButtons[i].name == "up") {
-
-                    moveButtons[i].src = unpressed;
-
-                }
-
-            }
-            dir = "UP";
-
-        } else if (e.key == "a" || e.key == "ArrowLeft") {
-
-            for (let i = 0; i < moveButtons.length; i++) {
-
-                if (moveButtons[i].name == "left") {
-
-                    moveButtons[i].src = unpressed;
-
-                }
-
-            }
-            dir = "LEFT";
-
-        } else if (e.key == "s" || e.key == "ArrowDown") {
-
-            for (let i = 0; i < moveButtons.length; i++) {
-
-                if (moveButtons[i].name == "down") {
-
-                    moveButtons[i].src = unpressed;
-
-                }
-
-            }
-            dir = "DOWN";
-
-        } else if (e.key == "d" || e.key == "ArrowRight") {
-
-            for (let i = 0; i < moveButtons.length; i++) {
-
-                if (moveButtons[i].name == "right") {
-
-                    moveButtons[i].src = unpressed;
-
-                }
-
-            }
-            dir = "RIGHT";
-
-        } else if (e.key = "Shift" && e.key != "Meta") {
+        if (e.key == "Shift") {
 
             isSlow = !isSlow;
             if (isSlow) {
@@ -157,21 +141,21 @@ $(function() {
 
                     type: "POST",
                     url: "/setMultiplier",
-                    data : {"multiplier": "1.0"}
+                    data : {"multiplier": "1"}
         
                 });
 
             }
 
             // Update graphics
-            for (let i = 0; i < moveButtons.length; i++) {
+            for (let i = 0; i < buttons.length; i++) {
 
-                if (moveButtons[i].name == "slow") {
+                if (buttons[i].name == "slow") {
 
                     if (isSlow)
-                        moveButtons[i].src = slowMode;
+                        buttons[i].src = slowMode;
                     else 
-                        moveButtons[i].src = normalMode;
+                        buttons[i].src = normalMode;
 
                 }
 
@@ -179,13 +163,137 @@ $(function() {
 
         }
 
+        if ((e.key == "w" && !isPressed[0]) || (e.key == "a" && !isPressed[1]) ||
+            (e.key == "s" && !isPressed[2]) || (e.key == "d" && !isPressed[3])) {
+
+            if (e.key == "w") isPressed[0] = true;
+            if (e.key == "a") isPressed[1] = true;
+            if (e.key == "s") isPressed[2] = true;
+            if (e.key == "d") isPressed[3] = true;
+            
+            $.ajax({
+
+                type: "POST",
+                url: "/setDirection",
+                data : {"dir": dir}
+    
+            });
+
+        }
+        
+    });
+
+    // Get keydown input
+    $(document).on("keyup", e => {
+
+        let dir;
+        if (e.key == "w") {
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "up") {
+
+                    buttons[i].src = unpressed;
+                    isPressed[0] = false;
+
+                }
+
+            }
+            dir = "up";
+
+        } 
+        if (e.key == "a") {
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "left") {
+
+                    buttons[i].src = unpressed;
+                    isPressed[1] = false;
+
+                }
+
+            }
+            dir = "left";
+
+        } 
+        if (e.key == "s") {
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "down") {
+
+                    buttons[i].src = unpressed;
+                    isPressed[2] = false;
+
+                }
+
+            }
+            dir = "down";
+
+        } 
+        if (e.key == "d") {
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                if (buttons[i].name == "right") {
+
+                    buttons[i].src = unpressed;
+                    isPressed[3] = false;
+
+                }
+
+            }
+            dir = "right";
+
+        } 
+        if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+
+            if (e.key == "ArrowUp") {
+             
+                isPressed[4] = false;
+            
+                for (let i = 0; i < buttons.length; i++) {
+
+                    if (buttons[i].name == "raise") {
+    
+                        buttons[i].src = raise;
+    
+                    }
+    
+                }
+
+            }
+            if (e.key == "ArrowDown") {
+            
+                isPressed[5] = false;
+            
+                for (let i = 0; i < buttons.length; i++) {
+
+                    if (buttons[i].name == "lower") {
+    
+                        buttons[i].src = lower;
+    
+                    }
+    
+                }
+
+            }
+            $.ajax({
+
+                url: "/setExtendPowerZero"
+    
+            });
+
+        } 
+
         if (dir) {
 
             $.ajax({
 
                 type: "POST",
                 url: "/setDirectionZero",
-                data : {"DIR": dir}
+                data : {"dir": dir}
     
             });
 

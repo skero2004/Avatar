@@ -4,7 +4,7 @@
     <head>
 
         <title>Avatar Controller</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
 
     </head>
@@ -16,10 +16,14 @@
         </h1>
 
         <canvas id="videoCanvas" width="640" height="480"></canvas>
-
+    
         <!-- Load image -->
         <div style="display: none;">
 
+            <img id="raise" src="{{url_for('static', filename='images/Raise.png')}}">
+            <img id="raisePressed" src="{{url_for('static', filename='images/RaisePressed.png')}}">
+            <img id="lower" src="{{url_for('static', filename='images/Lower.png')}}">
+            <img id="lowerPressed" src="{{url_for('static', filename='images/LowerPressed.png')}}">
             <img id="unpressed" src="{{url_for('static', filename='images/Unpressed.png')}}">
             <img id="pressed" src="{{url_for('static', filename='images/Pressed.png')}}">
             <img id="slowMode" src="{{url_for('static', filename='images/SlowMode.png')}}">
@@ -29,11 +33,11 @@
         
         <!-- js will put images here -->
         <div style="text-align: right; position: relative; display: block;">
-            <div style="display: inline-block; position: relative;" id="moveButtons"></div>
+            <div style="display: inline-block; position: relative;" id="buttons"></div>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="{{url_for('static', filename='js/moveButtons.js')}}"></script>
+        <script src="{{url_for('static', filename='js/buttons.js')}}"></script>
         <script src="{{url_for('static', filename='js/keyInput.js')}}"></script>
         <script type="text/javascript" src="{{url_for('static', filename='js/jsmpg.js')}}"></script>
         <script type="text/javascript">
