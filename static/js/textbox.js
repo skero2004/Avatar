@@ -9,9 +9,9 @@ $(function() {
     const text = $("<p>");
 
     const BOTTOM_POSITION = 420;
-    const DIFF = 65;
+    const DIFF = 20;
     const RIGHT_POSITION = 30;
-    const FONT_SIZE = 40;
+    const FONT_SIZE = 30;
     textbox.attr({
 
         "src": unselected,
@@ -21,7 +21,7 @@ $(function() {
     });
     text.attr({
 
-        "style": `text-align: left; font-size: ${FONT_SIZE}px; width: 400px; position: absolute; bottom: ${BOTTOM_POSITION - 33}px; right: ${RIGHT_POSITION}px;`
+        "style": `text-align: left; font-size: ${FONT_SIZE}px; width: 400px; position: absolute; bottom: ${BOTTOM_POSITION - DIFF}px; right: ${RIGHT_POSITION}px;`
 
     });
 
@@ -36,6 +36,7 @@ $(function() {
         for (let i = 0; i < t.length; i++) {
 
             $(text).append("<span>");
+            $(text).children("span")[i].style = "font-family: Nasalization";
             $(text).children("span")[i].textContent = t[i];
 
         }
@@ -63,8 +64,30 @@ $(function() {
 
                 if (isMobile) {
 
-                    name = prompt("What is your name?")
+                    name = prompt("What is your name?");
                     setText(name);
+                    loop: for (let i = name.length - 1; i >= 0; i--) {
+
+                        if ($(text).children()[i].getBoundingClientRect().right < 
+                            $(textbox).get(0).getBoundingClientRect().right -10) {
+                            
+                            const len = name.length;
+                            if (i == len - 1) {
+
+                                break loop;
+
+                            }
+                            for (let j = i + 1; j < len; j++) {
+
+                                $(text).children()[i + 1].remove();
+
+                            }
+                            break loop;
+
+                        }
+
+                    }
+                    textbox.attr("src", unselected);
 
                 }
     
@@ -93,7 +116,7 @@ $(function() {
                 if (name.length == 0)
                     name += e.key;
                 else if ($(text).children().last().get(0).getBoundingClientRect().right 
-                    < $(textbox).get(0).getBoundingClientRect().right - 50)
+                    < $(textbox).get(0).getBoundingClientRect().right - 45)
                     name += e.key;
 
             }
