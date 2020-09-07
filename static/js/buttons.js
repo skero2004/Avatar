@@ -41,9 +41,9 @@ $(function() {
         });
         buttons[button].css("position", "absolute");
 
-        const TOP_POSITION = -240;
+        const TOP_POSITION = -180;
         const LEFT_POSITION = -180;
-        const TO_HEAD_SPACING = 200
+        const TO_HEAD_SPACING = 140;
         const SPACING = 5;
 
         // Head raise buttons

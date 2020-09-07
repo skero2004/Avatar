@@ -19,6 +19,12 @@ $(function() {
     // Get keydown input    
     $(document).on("keydown", e => {
 
+        if ($("#textbox").children().attr("src") == $("#textSelected").attr("src")) {
+
+            return false;
+
+        }
+
         let dir;
         if (e.key == "w") {
 

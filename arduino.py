@@ -1,8 +1,11 @@
 from nanpy import ArduinoApi
+from nanpy import Lcd
 from nanpy import SerialManager
 
 # Setup Arduino
-ARDUINO = ArduinoApi(SerialManager(device="/dev/ttyACM0"))
+connection = SerialManager(device="/dev/ttyACM0")
+ARDUINO = ArduinoApi(connection)
+lcd = Lcd([52, 50, 48, 46, 44, 42], [16, 2], connection)
 
 # Arduino pins
 PINS = {
@@ -37,6 +40,12 @@ multiplier = {
     "multiplier": 1.0
 
 }
+
+# Set lcd display
+def setDisplay(text):
+    lcd.clear()
+    lcd.setCursor(0, 1)
+    lcd.printString(text)
 
 # Set motor power
 def setMotor(dirPin, pwmPin, power):

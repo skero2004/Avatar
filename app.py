@@ -67,6 +67,19 @@ def setMultiplier():
     arduino.updateDriveMotors()
     return ""    
 
+@app.route("/setDisplay", methods=["POST"])
+def setDisplay():
+    text = request.form["text"]
+    arduino.setDisplay(text)
+    return ""
+
+# For debugging
+@app.route("/debug", methods=["POST"])
+def debug():
+    text = request.form["text"]
+    print(text)
+    return ""
+
 
 
 # Run the app
