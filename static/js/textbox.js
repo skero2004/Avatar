@@ -8,7 +8,11 @@ $(function() {
     const textbox = $("<img>");
     const text = $("<p>");
 
-    const BOTTOM_POSITION = 420;
+    // Append image to div
+    $("#textbox").append(textbox);
+    $("#textbox").append(text);
+
+    const BOTTOM_POSITION = isMobile ? -60 : 420;
     const DIFF = 20;
     const RIGHT_POSITION = 30;
     const FONT_SIZE = 30;
@@ -16,18 +20,17 @@ $(function() {
 
         "src": unselected,
         "draggable": "false",
-        "style": `position: absolute; bottom: ${BOTTOM_POSITION}px; right: ${RIGHT_POSITION}px`
 
     });
-    text.attr({
+    textbox.attr("style", `position: absolute; bottom: ${BOTTOM_POSITION}px; ${isMobile ? "left: 50%; margin-right: -50%; transform: translate(-50%, 0)" : `right: ${RIGHT_POSITION}px`};`)
+    text.attr("style", `text-align: left; font-size: ${FONT_SIZE}px; width: 400px; position: absolute; bottom: ${BOTTOM_POSITION - DIFF}px; ${isMobile ? "left: 50%; margin-right: -50%; transform: translate(-50%, 0)" : `right: ${RIGHT_POSITION}px`};`);
 
-        "style": `text-align: left; font-size: ${FONT_SIZE}px; width: 400px; position: absolute; bottom: ${BOTTOM_POSITION - DIFF}px; right: ${RIGHT_POSITION}px;`
+    if (isMobile && screen.width < textbox.width()) {
 
-    });
+        textbox.width(screen.width);
+        text.width(screen.width - 10)
 
-    // Append image to div
-    $("#textbox").append(textbox);
-    $("#textbox").append(text);
+    }
 
     // Function to set text with span
     function setText(t) {

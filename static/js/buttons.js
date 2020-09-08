@@ -41,11 +41,10 @@ $(function() {
         });
         buttons[button].css("position", "absolute");
 
-        const TOP_POSITION = -180;
-        const LEFT_POSITION = -180;
-        const TO_HEAD_SPACING = 140;
+        const TOP_POSITION = isMobile ? 260 : -220;
+        const LEFT_POSITION = isMobile ? 0 : -180;
+        const TO_HEAD_SPACING = 160;
         const SPACING = 5;
-
         // Head raise buttons
         if (button == "raise") {
 
