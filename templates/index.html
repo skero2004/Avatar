@@ -43,6 +43,7 @@
 
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script>
+
             var isMobile = false; //initiate as false
             // device detection
             if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) 
@@ -53,7 +54,7 @@
                 isMobile = true;
             }
 
-            // Do stuff if mobile
+            // Change format if mobile
             if (isMobile) {
 
                 $("#title").hide();
@@ -86,10 +87,14 @@
                 });
 
             }
+            
         </script>
-        <script src="{{url_for('static', filename='js/textbox.js')}}"></script>
-        <script src="{{url_for('static', filename='js/buttons.js')}}"></script>
-        <script src="{{url_for('static', filename='js/keyInput.js')}}"></script>
+        <script src="{{url_for('static', filename='js/nameSender.js')}}"></script>
+        <script src="{{url_for('static', filename='js/button.js')}}"></script>
+        <script src="{{url_for('static', filename='js/elements.js')}}"></script>
+        <script src="{{url_for('static', filename='js/robotProperties.js')}}"></script>
+        <script src="{{url_for('static', filename='js/inputHandler.js')}}"></script>
+        <script src="{{url_for('static', filename='js/main.js')}}"></script>
         <script type="text/javascript" src="{{url_for('static', filename='js/jsmpg.js')}}"></script>
         <script type="text/javascript">
 

@@ -34,7 +34,7 @@ def index():
 # Set the direction
 @app.route("/setDirection", methods=["POST"])
 def setDirection():
-    direction = request.form["dir"]
+    direction = request.form["data"]
     arduino.robotDir[direction] = 1
     arduino.updateDriveMotors()
     return ""
@@ -42,7 +42,7 @@ def setDirection():
 # Set the direction to 0
 @app.route("/setDirectionZero", methods=["POST"])
 def setDirectionZero():
-    direction = request.form["dir"]
+    direction = request.form["data"]
     arduino.robotDir[direction] = 0
     arduino.updateDriveMotors()
     return ""
@@ -50,7 +50,7 @@ def setDirectionZero():
 # Set extend motor power
 @app.route("/setExtendPower", methods=["POST"])
 def setExtendPower():
-    power = request.form["power"]
+    power = request.form["data"]
     arduino.setMotor(arduino.PINS["DIR_EXT"], arduino.PINS["PWM_EXT"], float(power))
     return ""
 
@@ -62,14 +62,14 @@ def setExtendPowerZero():
 
 @app.route("/setMultiplier", methods=["POST"])
 def setMultiplier():
-    number = request.form["multiplier"]
+    number = request.form["data"]
     arduino.multiplier["multiplier"] = float(number)
     arduino.updateDriveMotors()
     return ""    
 
 @app.route("/setDisplay", methods=["POST"])
 def setDisplay():
-    text = request.form["text"]
+    text = request.form["data"]
     arduino.setDisplay(text)
     return ""
 

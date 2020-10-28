@@ -6,6 +6,9 @@ from nanpy import SerialManager
 connection = SerialManager(device="/dev/ttyACM0")
 ARDUINO = ArduinoApi(connection)
 lcd = Lcd([52, 50, 48, 46, 44, 42], [16, 2], connection)
+lcd.clear()
+lcd.setCursor(0, 1)
+lcd.printString("FRC Team 568")
 
 # Arduino pins
 PINS = {
@@ -70,7 +73,7 @@ def setMotor(dirPin, pwmPin, power):
 
 # Update drive motors
 def updateDriveMotors():
-    
+
     drive = robotDir["up"] - robotDir["down"]
     turn = robotDir["right"] - robotDir["left"]
 
@@ -81,5 +84,9 @@ def updateDriveMotors():
     if maximum > 1:
         left /= maximum
         right /= maximum
-    setMotor(PINS["DIR_L"], PINS["PWM_L"], left * multiplier["multiplier"])
-    setMotor(PINS["DIR_R"], PINS["PWM_R"], right * multiplier["multiplier"])
+
+    # Set left motor
+    setMotor(PINS["DIR_L"], PINS["PWM_L"], 0.5 * left * multiplier["multiplier"])
+
+    # Set right motor
+    setMotor(PINS["DIR_R"], PINS["PWM_R"], 0.5 * right * multiplier["multiplier"])
