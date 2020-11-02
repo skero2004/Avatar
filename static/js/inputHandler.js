@@ -8,13 +8,9 @@ class InputHandler {
         // All robot properties
         this.properties = properties;
 
-        // List of inputs
-        this.isW = false;
-        this.isA = false;
-        this.isS = false;
-        this.isD = false;
-        this.isUp = false;
-        this.isDown = false;
+        // Prevent multi-touch
+        this.isPressed = false;
+        this.pressedKey;
 
         // Event listeners
         document.addEventListener("keydown", this.onKeyDown.bind(this));
@@ -26,25 +22,130 @@ class InputHandler {
     }
 
     onKeyDown(e) {
-        
-        switch(e.key) {
 
+        // Prevent spamming
+        if (!this.isPressed) {
+
+            this.isPressed = true;
+            this.pressedKey = e.key;
+
+            switch(e.key) {
+
+                // Move the robot
+                case "w":
+                    if (!this.elements.nameSender.isSelected())
+                        this.elements.upButton.press("/setDirection", "up")
+                    break;
+                case "a":
+                    if (!this.elements.nameSender.isSelected())
+                        this.elements.leftButton.press("/setDirection", "left");
+                    break;
+                case "s":
+                    if (!this.elements.nameSender.isSelected())
+                        this.elements.downButton.press("/setDirection", "down");
+                    break;
+                case "d":
+                    if (!this.elements.nameSender.isSelected())
+                        this.elements.rightButton.press("/setDirection", "right");
+                    break;
+    
+                // Slow the robot
+                case "Shift":
+                    // Prevent slow mode when typing name
+                    if (!this.elements.nameSender.isSelected()) {
+
+                        this.properties.isSlow = !this.properties.isSlow;
+                        if (this.properties.isSlow) {
+        
+                            this.elements.slowButton.press("/setMultiplier", 0.7);
+        
+                        } else {
+        
+                            this.elements.slowButton.press("/setMultiplier", 1);
+                            this.elements.slowButton.toggleImage();
+        
+                        }
+                        
+                    }
+                    break;
+                // Raise and lower the lift
+                case "ArrowUp":
+                    this.elements.raiseButton.press("/setExtendPower", -1);
+                    break;
+                case "ArrowDown":
+                    this.elements.lowerButton.press("/setExtendPower", 1);
+                    break;
+    
+            }
+
+        }
+
+        // Type on textbox if it is selected
+        if (this.elements.nameSender.isSelected()) {
+    
+            this.elements.nameSender.typeText(e);
+
+        }
+
+    }
+
+    onKeyUp(e) {
+
+        // Unpress only the pressed key
+        if (e.key == this.pressedKey) {
+
+            this.isPressed = false
+
+            switch(e.key) {
+
+                // Stop the robot
+                case "w":
+                    this.elements.upButton.unpress("/setDirectionZero", "up");
+                    break;
+                case "a":
+                    this.elements.leftButton.unpress("/setDirectionZero", "left");
+                    break;
+                case "s":
+                    this.elements.downButton.unpress("/setDirectionZero", "down");
+                    break;
+                case "d":
+                    this.elements.rightButton.unpress("/setDirectionZero", "right");
+                    break;
+    
+                // Stop moving lift
+                case "ArrowUp":
+                    this.elements.raiseButton.unpress("/setExtendPowerZero");
+                    break;
+                case "ArrowDown":
+                    this.elements.lowerButton.unpress("/setExtendPowerZero");
+                    break;
+    
+            }
+
+        }
+
+    }
+
+    onTouchStart(e) {
+
+        switch(e.target.name) {
+            
             // Move the robot
-            case "w":
+            case "up":
                 this.elements.upButton.press("/setDirection", "up");
                 break;
-            case "a":
+            case "left":
                 this.elements.leftButton.press("/setDirection", "left");
                 break;
-            case "s":
+            case "down":
                 this.elements.downButton.press("/setDirection", "down");
                 break;
-            case "d":
+            case "right":
                 this.elements.rightButton.press("/setDirection", "right");
                 break;
 
             // Slow the robot
-            case "Shift":
+            case "slow":
                 this.properties.isSlow = !this.properties.isSlow;
                 if (this.properties.isSlow) {
 
@@ -59,92 +160,10 @@ class InputHandler {
                 break;
 
             // Raise and lower the lift
-            case "ArrowUp":
+            case "raise":
                 this.elements.raiseButton.press("/setExtendPower", -1);
                 break;
-            case "ArrowDown":
-                this.elements.lowerButton.press("/setExtendPower", 1);
-                break;
-
-        }
-
-        // Type on textbox if it is selected
-        if (this.elements.nameSender.isSelected()) {
-
-            this.elements.nameSender.typeText(e);
-
-        }
-
-    }
-
-    onKeyUp(e) {
-
-        switch(e.key) {
-
-            // Stop the robot
-            case "w":
-                this.elements.upButton.unpress("/setDirectionZero", "up");
-                break;
-            case "a":
-                this.elements.leftButton.unpress("/setDirectionZero", "left");
-                break;
-            case "s":
-                this.elements.downButton.unpress("/setDirectionZero", "down");
-                break;
-            case "d":
-                this.elements.rightButton.unpress("/setDirectionZero", "right");
-                break;
-
-            // Stop moving lift
-            case "ArrowUp":
-                this.elements.raiseButton.unpress("/setExtendPowerZero");
-                break;
-            case "ArrowDown":
-                this.elements.lowerButton.unpress("/setExtendPowerZero");
-                break;
-
-        }
-
-    }
-
-    onTouchStart(e) {
-
-        switch(e.target) {
-
-            // Move the robot
-            case this.elements.upButton.img:
-                this.elements.upButton.press("/setDirection", "up");
-                break;
-            case this.elements.leftButton.img:
-                this.elements.leftButton.press("/setDirection", "left");
-                break;
-            case this.elements.downButton.img:
-                this.elements.downButton.press("/setDirection", "left");
-                break;
-            case this.elements.rightButton.img:
-                this.elements.rightButton.press("/setDirection", "left");
-                break;
-
-            // Slow the robot
-            case this.elements.slowButton.img:
-                this.properties.isSlow = !this.properties.isSlow;
-                if (this.properties.isSlow) {
-
-                    this.elements.slowButton.press("/setMultiplier", 0.7);
-
-                } else {
-
-                    this.elements.slowButton.press("/setMultiplier", 1);
-
-                }
-                this.elements.slowButton.toggleImage();
-                break;
-
-            // Raise and lower the lift
-            case this.elements.raiseButton.img:
-                this.elements.raiseButton.press("/setExtendPower", -1);
-                break;
-            case this.elements.lowerButton.img:
+            case "lower":
                 this.elements.lowerButton.press("/setExtendPower", 1);
                 break;
 
@@ -154,27 +173,27 @@ class InputHandler {
 
     onTouchEnd(e) {
 
-        switch(e.target) {
+        switch(e.target.name) {
 
             // Stop the robot
-            case this.elements.upButton.img:
+            case "up":
                 this.elements.upButton.unpress("/setDirectionZero", "up");
                 break;
-            case this.elements.leftButton.img:
+            case "left":
                 this.elements.leftButton.unpress("/setDirectionZero", "left");
                 break;
-            case this.elements.downButton.img:
+            case "down":
                 this.elements.downButton.unpress("/setDirectionZero", "down");
                 break;
-            case this.elements.rightButton.img:
+            case "right":
                 this.elements.rightButton.unpress("/setDirectionZero", "right");
                 break;
 
             // Stop moving lift
-            case this.elements.raiseButton.img:
+            case "raise":
                 this.elements.raiseButton.unpress("/setExtendPowerZero");
                 break;
-            case this.elements.lowerButton.img:
+            case "lower":
                 this.elements.lowerButton.unpress("/setExtendPowerZero");
                 break;
 
@@ -206,12 +225,6 @@ class InputHandler {
             this.elements.nameSender.unselect();
 
         }
-
-    }
-
-    update() {
-
-        
 
     }
 

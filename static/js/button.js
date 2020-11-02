@@ -1,6 +1,6 @@
 class Button {
 
-    constructor(imgUnpressed, imgPressed, numPosition) {
+    constructor(imgUnpressed, imgPressed, numPosition, name) {
 
         // Image element
         this.img = $("<img>");
@@ -18,6 +18,7 @@ class Button {
 
             "src": imgUnpressed,
             "draggable": false,
+            "name": name
 
         });
         this.img.css("position", "absolute");
@@ -35,7 +36,7 @@ class Button {
 
         */
 
-        const TOP_POSITION = isMobile ? 35 : -325;
+        const TOP_POSITION = isMobile ? 100 : -325;
         const LEFT_POSITION = isMobile ? -155 : -335;
         const SPACING = 105;
         const X_POS = (((numPosition - 1) % 3) * SPACING) + LEFT_POSITION;
