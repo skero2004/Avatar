@@ -1,12 +1,25 @@
+#-------- Imports --------#
+
+# Flask imports
 from flask import Flask, render_template, request, Response
 from flask_httpauth import HTTPDigestAuth
 from threading import Thread
+
+# System imports
 import os
 import sys
 import io
+import RPi.GPIO as GPIO
+
+# Custom imports
+from settings import Settings
+from ledMatrix import LEDMatrix
+from drive import Drive
 import server
-import arduino
-import pi
+
+
+
+#-------- App Setup --------#
 
 # App variable
 app = Flask(__name__)
@@ -31,48 +44,57 @@ def index():
 
 
 
+#-------- Objects --------#
+
+# Settings object includes all setups
+settings = Settings()
+
+# Subsystems
+ledMatrix = LEDMatrix(settings)
+drive = Drive(settings)
+
+
+
+#-------- Functions --------#
+
 # Set the direction
 @app.route("/setDirection", methods=["POST"])
 def setDirection():
-    direction = request.form["data"]
-    arduino.robotDir[direction] = 1
-    arduino.updateDriveMotors()
+    dir = request.form["data"]
+    drive.moveRobot(dir)
     return ""
 
 # Stop the robot
 @app.route("/stop")
 def stop():
-    arduino.robotDir["up"] = 0
-    arduino.robotDir["left"] = 0
-    arduino.robotDir["down"] = 0
-    arduino.robotDir["right"] = 0
-    arduino.updateDriveMotors()
+    drive.stopRobot()
     return ""
 
 # Set extend motor power
 @app.route("/setExtendPower", methods=["POST"])
 def setExtendPower():
     power = request.form["data"]
-    arduino.setMotor(arduino.PINS["DIR_EXT"], arduino.PINS["PWM_EXT"], float(power))
+    drive.setMotor(drive.PINS["DIR_EXT"], drive.PINS["PWM_EXT"], float(power))
     return ""
 
 # Set extend motor power to zero
 @app.route("/setExtendPowerZero")
 def setExtendPowerZero():
-    arduino.setMotor(arduino.PINS["DIR_EXT"], arduino.PINS["PWM_EXT"], 0)
+    drive.setMotor(drive.PINS["DIR_EXT"], drive.PINS["PWM_EXT"], 0)
     return ""
 
+# Set the speed of the robot
 @app.route("/setMultiplier", methods=["POST"])
 def setMultiplier():
-    number = request.form["data"]
-    arduino.multiplier["multiplier"] = float(number)
-    arduino.updateDriveMotors()
+    multiplier = request.form["data"]
+    drive.setMultiplier(multiplier)
     return ""    
 
+# Send the name data
 @app.route("/setDisplay", methods=["POST"])
 def setDisplay():
     text = request.form["data"]
-    arduino.setDisplay(text)
+    ledMatrix.setDisplay(text)
     return ""
 
 # For debugging
@@ -84,18 +106,21 @@ def debug():
 
 
 
+#-------- App Finalization --------#
+
 # Run the app
 if __name__ == "__main__":
     Thread(target=server.main, daemon=True).start()
-    #Thread(target=pi.main, daemon=True).start()
     app.run(debug=True, port=80, host="0.0.0.0")
 
 
+
+#-------- After App Ended --------#
 
 # Reset after exit
 try:  
     pass
 finally:  
-    pi.GPIO.cleanup()
-    for PIN in arduino.PINS:
-        arduino.ARDUINO.digitalWrite(arduino.PINS[PIN], arduino.ARDUINO.LOW)
+    GPIO.cleanup()
+    for PIN in settings.ARDUINO_PINS:
+        settings.ARDUINO.digitalWrite(settings.ARDUINO_PINS[PIN], settings.ARDUINO.LOW)
