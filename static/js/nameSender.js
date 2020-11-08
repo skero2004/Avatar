@@ -144,6 +144,15 @@ class NameSender {
         // Change image
         this.box.attr("src", this.imgSelected);
 
+        // If it is the first time clicked, then empty text
+        if (this.name == "Type in name here") {
+
+            this.setText("");
+            this.name = "";
+            this.isClicked = true;
+
+        }
+
     }
 
     unselect() {

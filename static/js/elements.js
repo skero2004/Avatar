@@ -8,6 +8,8 @@ class Elements {
 
         this.slowButton = new Button($("#normalMode").attr("src"), $("#slowMode").attr("src"), 4, "slow");
         
+        this.stopButton = new Button($("#stop").attr("src"), $("#stopPressed").attr("src"), 6, "stop");
+
         this.upButton = new Button($("#unpressed").attr("src"), $("#pressed").attr("src"), 5, "up");
         this.leftButton = new Button($("#unpressed").attr("src"), $("#pressed").attr("src"), 7, "left");
         this.leftButton.rotate(-90);

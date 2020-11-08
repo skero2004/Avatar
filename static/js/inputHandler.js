@@ -80,6 +80,9 @@ class InputHandler {
 
         }
 
+        // Emergency stop
+        if (e.key == " ") this.elements.stopButton.press("/stop");
+
         // Type on textbox if it is selected
         if (this.elements.nameSender.isSelected()) {
     
@@ -99,17 +102,11 @@ class InputHandler {
             switch(e.key) {
 
                 // Stop the robot
-                case "w":
-                    this.elements.upButton.unpress("/setDirectionZero", "up");
-                    break;
-                case "a":
-                    this.elements.leftButton.unpress("/setDirectionZero", "left");
-                    break;
-                case "s":
-                    this.elements.downButton.unpress("/setDirectionZero", "down");
-                    break;
-                case "d":
-                    this.elements.rightButton.unpress("/setDirectionZero", "right");
+                case "w": case "a": case "s": case "d":
+                    this.elements.upButton.unpress();
+                    this.elements.leftButton.unpress();
+                    this.elements.downButton.unpress();
+                    this.elements.rightButton.unpress("/stop");
                     break;
     
                 // Stop moving lift
@@ -123,6 +120,9 @@ class InputHandler {
             }
 
         }
+
+        // Unpress emergency stop button
+        if (e.key == " ") this.elements.stopButton.unpress();
 
     }
 
@@ -167,6 +167,11 @@ class InputHandler {
                 this.elements.lowerButton.press("/setExtendPower", 1);
                 break;
 
+            // Emergency stop
+            case "stop":
+                this.elements.stopButton.press("/stop");
+                break;
+
         }
 
     }
@@ -176,17 +181,11 @@ class InputHandler {
         switch(e.target.name) {
 
             // Stop the robot
-            case "up":
-                this.elements.upButton.unpress("/setDirectionZero", "up");
-                break;
-            case "left":
-                this.elements.leftButton.unpress("/setDirectionZero", "left");
-                break;
-            case "down":
-                this.elements.downButton.unpress("/setDirectionZero", "down");
-                break;
-            case "right":
-                this.elements.rightButton.unpress("/setDirectionZero", "right");
+            case "up": case "left": case "down": case "right":
+                this.elements.upButton.unpress();
+                this.elements.leftButton.unpress();
+                this.elements.downButton.unpress();
+                this.elements.rightButton.unpress("/stop");
                 break;
 
             // Stop moving lift
@@ -195,6 +194,11 @@ class InputHandler {
                 break;
             case "lower":
                 this.elements.lowerButton.unpress("/setExtendPowerZero");
+                break;
+            
+            // Unpress emergency stop button
+            case "stop":
+                this.elements.stopButton.unpress();
                 break;
 
         }

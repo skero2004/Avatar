@@ -81,17 +81,17 @@ class Button {
 
     }
 
-    press(command, sendData = null) {
+    press(command = null, sendData = null) {
 
         this.img.attr("src", this.imgPressed);
-        this.sendData(command, sendData);
+        if (command) this.sendData(command, sendData);
 
     }
 
-    unpress(command, sendData = null) {
+    unpress(command = null, sendData = null) {
 
         this.img.attr("src", this.imgUnpressed);
-        this.sendData(command, sendData);
+        if (command) this.sendData(command, sendData);
 
     }
 

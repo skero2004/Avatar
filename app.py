@@ -39,11 +39,13 @@ def setDirection():
     arduino.updateDriveMotors()
     return ""
 
-# Set the direction to 0
-@app.route("/setDirectionZero", methods=["POST"])
-def setDirectionZero():
-    direction = request.form["data"]
-    arduino.robotDir[direction] = 0
+# Stop the robot
+@app.route("/stop")
+def stop():
+    arduino.robotDir["up"] = 0
+    arduino.robotDir["left"] = 0
+    arduino.robotDir["down"] = 0
+    arduino.robotDir["right"] = 0
     arduino.updateDriveMotors()
     return ""
 
