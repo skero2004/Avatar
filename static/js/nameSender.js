@@ -39,7 +39,7 @@ class NameSender {
         // Set up text
         this.name = "Type in name here";
         this.setText(this.name);
-        this.sendData("/setDisplay", "FRC Team 568");
+        this.sendData("/setDisplay", "FRC Team 568 The Nerds of the North");
 
     }
 
@@ -123,7 +123,7 @@ class NameSender {
 
         } else if (((e.which > 64 && e.which < 91) || (e.which > 96 && e.which < 123) || 
                     e.which == 8 || e.which == 32 || (e.which >= 48 && e.which <= 57)) &&
-                    !(e.which >= 112 && e.which <= 123)) {
+                    !(e.which >= 112 && e.which <= 123) || (e.which == 186) || (e.which == 190)) {
 
             // Add letter if valid letter
             if (this.name.length == 0)
@@ -133,7 +133,7 @@ class NameSender {
                 this.name += e.key;
 
         }
-        
+
         // Set the text and send data
         this.setText(this.name);
 

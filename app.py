@@ -12,9 +12,7 @@ import io
 import RPi.GPIO as GPIO
 
 # Custom imports
-from settings import Settings
-from ledMatrix import LEDMatrix
-from drive import Drive
+from robot import Robot
 import server
 
 
@@ -44,14 +42,29 @@ def index():
 
 
 
+#-------- Raspberry Pi setup --------#
+
+# GPIO settings
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BCM)
+
+# Pi pins
+PI_PINS = {
+
+    "LIMIT": 17
+
+}
+for pin in PI_PINS:
+    GPIO.setup(PI_PINS[pin], GPIO.OUT)
+    if pin == "LIMIT":
+        GPIO.setup(PI_PINS[pin], GPIO.IN)
+
+
+
 #-------- Objects --------#
 
-# Settings object includes all setups
-settings = Settings()
-
-# Subsystems
-ledMatrix = LEDMatrix(settings)
-drive = Drive(settings)
+# Robot object
+robot = Robot()
 
 
 
@@ -61,40 +74,57 @@ drive = Drive(settings)
 @app.route("/setDirection", methods=["POST"])
 def setDirection():
     dir = request.form["data"]
-    drive.moveRobot(dir)
+    if (dir == "up"):
+        robot.forward()
+    elif (dir == "down"):
+        robot.backward()
+    elif (dir == "right"):
+        robot.turnRight()
+    elif (dir == "left"):
+        robot.turnLeft()
+    else:
+        print("Couldn't detect direction")
     return ""
 
 # Stop the robot
 @app.route("/stop")
 def stop():
-    drive.stopRobot()
+    robot.stop()
     return ""
 
 # Set extend motor power
 @app.route("/setExtendPower", methods=["POST"])
 def setExtendPower():
     power = request.form["data"]
-    drive.setMotor(drive.PINS["DIR_EXT"], drive.PINS["PWM_EXT"], float(power))
+    if int(power) == -1:
+        robot.retractDown()
+    elif int(power) == 1:
+        robot.extendUp()
+    else:
+        print("Couldn't detect extend power")
     return ""
 
 # Set extend motor power to zero
 @app.route("/setExtendPowerZero")
 def setExtendPowerZero():
-    drive.setMotor(drive.PINS["DIR_EXT"], drive.PINS["PWM_EXT"], 0)
+    robot.stopExtender()
     return ""
 
 # Set the speed of the robot
 @app.route("/setMultiplier", methods=["POST"])
 def setMultiplier():
     multiplier = request.form["data"]
-    drive.setMultiplier(multiplier)
+    if float(multiplier) == 1.0:
+        robot.setNormal()
+    elif float(multiplier) == 0.7:
+        robot.setSlow()
     return ""    
 
 # Send the name data
 @app.route("/setDisplay", methods=["POST"])
 def setDisplay():
     text = request.form["data"]
-    ledMatrix.setDisplay(text)
+    robot.setDisplay(text)
     return ""
 
 # For debugging
@@ -122,5 +152,4 @@ try:
     pass
 finally:  
     GPIO.cleanup()
-    for PIN in settings.ARDUINO_PINS:
-        settings.ARDUINO.digitalWrite(settings.ARDUINO_PINS[PIN], settings.ARDUINO.LOW)
+    robot.stop()
