@@ -123,7 +123,8 @@ class NameSender {
 
         } else if (((e.which > 64 && e.which < 91) || (e.which > 96 && e.which < 123) || 
                     e.which == 8 || e.which == 32 || (e.which >= 48 && e.which <= 57)) &&
-                    !(e.which >= 112 && e.which <= 123) || (e.which == 186) || (e.which == 190)) {
+                    !(e.which >= 112 && e.which <= 123) || (e.which == 186) || (e.which == 190)
+                    || (e.which == 188)) {
 
             // Add letter if valid letter
             if (this.name.length == 0)
